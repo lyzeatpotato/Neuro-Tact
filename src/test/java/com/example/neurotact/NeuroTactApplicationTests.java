@@ -20,7 +20,7 @@ class NeuroTactApplicationTests {
 
     @Test
     public void testPortsReading () throws InterruptedException {
-        List<String> com5 = dataService.getCurrentList("COM5");
+        List<Float> com5 = dataService.getCurrentList("COM5");
         com5.forEach(System.out::println);
     }
 
@@ -33,5 +33,21 @@ class NeuroTactApplicationTests {
 
         }).start();
         System.out.println("主线程通过InheritableThreadLocal获取值:" + inheritableThreadLocal.get());
+    }
+
+    @Test
+    public void testCompute() {
+        int[][] arr = new int[3][4];
+        int sum = 0;
+        arr[0][0] = 3;
+        arr[0][1] = 4;
+        arr[1][2] = 5;
+        arr[2][3] = 6;
+        arr[3][4] = 7;
+        arr[3][3] = 8;
+        for (int i = 0; i < 3; i++) {
+            sum += arr[i][i+1];
+        }
+        System.out.println(sum);
     }
 }
