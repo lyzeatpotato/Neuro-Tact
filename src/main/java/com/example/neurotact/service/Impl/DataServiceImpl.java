@@ -17,15 +17,11 @@ import java.util.List;
 
 @Service
 public class DataServiceImpl implements DataService {
-
-    PortReader portReader = new PortReader("COM5");
+    private static PortReader portReader;
 
     @Override
-    public List<Float> getCurrentList(String portDescription) throws InterruptedException {
+    public List<Float> getCurrentList(String portDescription) {
 
-        // 启动线程类开始读取串口数据
-        portReader.getPortData();
-        Thread.sleep(100);
         String[] portData = portReader.getReorderedList();
         // 对获取到的String数据转成Float
         Float[] resPortData = new Float[portData.length];
@@ -36,8 +32,8 @@ public class DataServiceImpl implements DataService {
         // 加载原始点坐标数组
         Float[] fileData = new Float[144 * 8];  // 一共144 * (3个坐标值 + 1个法向量)
         try {
-            String path = "E:\\Codestation\\Java\\Workspace\\Neuro-Tact\\src\\main\\resources\\txt\\surfacexyz.txt";
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path)), "UTF-8"));
+            String path = "/txt/surfacexyz.txt";
+            BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path)));
             String lineTxt = null;
             int count = 0;
             // 逐行读取
@@ -62,11 +58,20 @@ public class DataServiceImpl implements DataService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        resPortData = UnitedUtils.reorderPointList(fileData, resPortData);
+        UnitedUtils utils = new UnitedUtils();
+        resPortData = utils.reorderPointList(fileData, resPortData);
         //System.out.println("原始坐标点数组：" + Arrays.asList(fileData));
         //System.out.println("修改后坐标点数组：" + Arrays.asList(resPortData));
 
         return Arrays.asList(resPortData);
+    }
+
+    @Override
+    public Object startPortThread(String portDescription) throws InterruptedException {
+        portReader = new PortReader("COM5");
+        // 启动线程类开始读取串口数据
+        portReader.getPortData();
+        Thread.sleep(100);
+        return null;
     }
 }

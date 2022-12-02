@@ -1,13 +1,8 @@
 package com.example.neurotact.common;
 
+import com.example.neurotact.utils.UnitedUtils;
 import com.fazecast.jSerialComm.SerialPort;
-import lombok.Data;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
-import static com.example.neurotact.utils.UnitedUtils.listReorder;
 import static java.lang.Thread.interrupted;
 
 /**
@@ -40,13 +35,19 @@ public class PortReader {
     }
 
     public void getPortData() {
+        SerialPort[] commPorts = SerialPort.getCommPorts();
+        for (SerialPort commPort : commPorts) {
+            System.out.println("Port：" + commPort.getSystemPortName());
+            System.out.println("PortMsg:" + commPort.getPortDescription());
+        }
+        SerialPort comPort = SerialPort.getCommPort(portDescription);
+        System.out.println(comPort.getSystemPortPath());
+        comPort.setBaudRate(115200);
+        comPort.openPort();
         new Thread(() -> {
-            SerialPort comPort = SerialPort.getCommPort(portDescription);
-            comPort.setBaudRate(115200);
-            comPort.openPort();
+            byte[] readBuffer = new byte[723];
             while (!Thread.currentThread().isInterrupted()) {
                 if (comPort.bytesAvailable() != 0) {
-                    byte[] readBuffer = new byte[723];
                     int numRead = comPort.readBytes(readBuffer, 723);
                     String getStr;
                     try {
@@ -54,10 +55,10 @@ public class PortReader {
                         getStr = getStr.substring(1, getStr.length() - 3);
                         String[] strList = getStr.split(",");
                         if (strList.length == 143 || strList.length == 144) {
-                            reorderedList = listReorder(strList, reorder_list);
-//                            System.out.println("重新排序后的数组：" + Arrays.toString(reorderedList));
+                            reorderedList = UnitedUtils.listReorder(strList, reorder_list);
+//                            System.out.println(Arrays.asList(reorderedList));
                         }
-                    } catch (UnsupportedEncodingException e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
@@ -67,9 +68,8 @@ public class PortReader {
                     System.out.println("线程停止");
                     return;
                 }
-                //                comPort.closePort();
+                // comPort.closePort();
             }
         }, "portThread").start();
-
     }
 }

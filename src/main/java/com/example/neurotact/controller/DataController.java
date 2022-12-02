@@ -35,4 +35,11 @@ public class DataController {
     public ResultEntity getCurrentPortList(@RequestParam("current_port_name") String portDescription) throws InterruptedException {
         return BasicResponseUtils.success(dataService.getCurrentList(portDescription));
     }
+
+    @ApiOperation(value = "启动串口读取线程")
+    @ApiOperationSupport(order = 2)
+    @GetMapping("startPortThread")
+    public ResultEntity startPortThread(@RequestParam("current_port_name") String portDescription) throws InterruptedException {
+        return BasicResponseUtils.success(dataService.startPortThread(portDescription));
+    }
 }
