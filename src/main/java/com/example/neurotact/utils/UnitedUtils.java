@@ -60,14 +60,9 @@ public class UnitedUtils {
             // 分别更新x,y,z的值
             float theta = polarData[i][0];
             float beta = polarData[i][1];
-            resultPointArr[i * 8 + 0] = new Float(pointArr[i * 8 + 0] + portArr[i] * Math.sin(theta) * Math.cos(beta) * 1.5);
-            resultPointArr[i * 8 + 1] = new Float(pointArr[i * 8 + 1] + portArr[i] * Math.sin(theta) * Math.sin(beta) * 1.5);
-            resultPointArr[i * 8 + 2] = new Float(pointArr[i * 8 + 2] + portArr[i] * Math.cos(theta) * 1.5);
-            resultPointArr[i * 8 + 3] = Float.valueOf(1);
-            resultPointArr[i * 8 + 4] = new Float(pointArr[i * 8 + 0] * 0.5);
-            resultPointArr[i * 8 + 5] = new Float(pointArr[i * 8 + 1] * 0.6);
-            resultPointArr[i * 8 + 6] = new Float(pointArr[i * 8 + 2] * 0.7);
-            resultPointArr[i * 8 + 7] = Float.valueOf(1);
+            resultPointArr[i * 3 + 0] = new Float(pointArr[i * 3 + 0] + portArr[i] * Math.sin(theta) * Math.cos(beta) * 1.5 * 100);
+            resultPointArr[i * 3 + 1] = new Float(pointArr[i * 3 + 1] + portArr[i] * Math.sin(theta) * Math.sin(beta) * 1.5 * 100);
+            resultPointArr[i * 3 + 2] = new Float(pointArr[i * 3 + 2] + portArr[i] * Math.cos(theta) * 1.5 * 100);
         }
         return resultPointArr;
     }

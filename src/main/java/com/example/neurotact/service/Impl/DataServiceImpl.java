@@ -30,7 +30,7 @@ public class DataServiceImpl implements DataService {
         }
 
         // 加载原始点坐标数组
-        Float[] fileData = new Float[144 * 8];  // 一共144 * (3个坐标值 + 1个法向量)
+        Float[] fileData = new Float[144 * 3];  // 一共144 * (3个坐标值)
         try {
             String path = "/txt/surfacexyz.txt";
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path)));
@@ -41,17 +41,8 @@ public class DataServiceImpl implements DataService {
                 String[] names = lineTxt.split(" ");
                 // 设置点的坐标值
                 for (int i = 0; i < names.length; i++) {
-                    fileData[count*8 + i] = Float.parseFloat(names[i]) / 100;
+                    fileData[count*3 + i] = Float.parseFloat(names[i]);
                 }
-                fileData[count*8 + 3] = Float.valueOf(1);
-                // 设置点的颜色值与当前点坐标值相同
-                for (int i = 0; i < names.length; i++) {
-                    fileData[count*8 + 4 + i] = Float.parseFloat(names[i]) / 100;
-                }
-                //fileData[count*8 + 4] = Float.valueOf(0);
-                //fileData[count*8 + 5] = Float.valueOf((float) 0.74902);
-                //fileData[count*8 + 6] = Float.valueOf(1);
-                fileData[count*8 + 7] = Float.valueOf(1);
                 count++;
             }
             br.close();
